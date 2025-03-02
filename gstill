@@ -1,0 +1,111 @@
+import tkinter as tk
+from tkinter import ttk
+from PIL import Image, ImageTk
+from tkinter.font import Font
+
+class ClickerApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Кликер")
+        self.root.geometry("400x500")
+
+        # Создание вкладок
+        self.notebook = ttk.Notebook(root)
+        self.notebook.pack(fill='both', expand=True)
+
+        # Создание страниц с разными фонами
+        self.create_home_family_page()
+        self.create_capt_page()
+        self.create_gangstill_page()
+        self.create_aidrop_page()
+
+    def create_background(self, frame, image_path):
+        bg_image = Image.open(image_path)
+        bg_image = bg_image.resize((400, 500), Image.LANCZOS)
+        bg_photo = ImageTk.PhotoImage(bg_image)
+
+        bg_label = tk.Label(frame, image=bg_photo)
+        bg_label.image = bg_photo  # Сохраняем ссылку на изображение
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)  # Занять всю область фрейма
+
+    def create_home_family_page(self):
+        # Страница Home Family
+        home_frame = tk.Frame(self.notebook)
+        self.notebook.add(home_frame, text='Home Family')
+        self.create_background(home_frame, "images/Phone.png")  # Используем относительный путь
+
+        self.score = 0
+        # Установка шрифта GTA
+        self.gta_font = Font(family="Pricedown BL", size=24)
+        self.score_label = tk.Label(home_frame, text=f"Bang: {self.score}", font=self.gta_font, bg='lightblue')
+        self.score_label.pack(pady=10)
+
+        # Загрузка изображения для кнопки
+        self.click_image_btn = Image.open("images/Token.png")  # Используем относительный путь
+        self.click_image_btn = self.click_image_btn.resize((255, 255), Image.LANCZOS)
+        self.button_image = ImageTk.PhotoImage(self.click_image_btn)
+
+        # Создание кнопки кликера
+        self.click_button = tk.Button(
+            home_frame,
+            image=self.button_image,
+            command=self.on_button_click,
+            borderwidth=0,
+            highlightthickness=0,
+            bd=0
+        )
+        self.click_button.pack(pady=20)
+
+    def create_capt_page(self):
+        # Страница Capt
+        capt_frame = tk.Frame(self.notebook)
+        self.notebook.add(capt_frame, text='Capt')
+        self.create_background(capt_frame, "images/Phone.png")
+
+        sub_button_1 = tk.Button(capt_frame, text="Подписаться", command=self.do_nothing)
+        sub_button_1.pack(pady=10)
+
+        sub_button_2 = tk.Button(capt_frame, text="Подписаться", command=self.do_nothing)
+        sub_button_2.pack(pady=10)
+
+    def create_gangstill_page(self):
+        # Страница GangStill
+        gangstill_frame = tk.Frame(self.notebook)
+        self.notebook.add(gangstill_frame, text='Gang Still')
+        self.create_background(gangstill_frame, "gphone.png")  # Используем относительный путь
+
+        gangstill_description = tk.Label(gangstill_frame, text="Малая часть вас может знать наши корни\n\nчто выходят из youtube канала\n\nс самым кринжовым контентом", bg='lightcoral')
+        gangstill_description.pack(pady=20)
+
+    def create_aidrop_page(self):
+        # Страница Aidrop
+        aidrop_frame = tk.Frame(self.notebook)
+        self.notebook.add(aidrop_frame, text='Aidrop')
+        self.create_background(aidrop_frame, "aidphone.png")  # Используем относительный путь
+
+        aidrop_description = tk.Label(aidrop_frame, text="Каждый from family Gang Still получит свою долю", bg='blue')
+        aidrop_description.pack(pady=20)
+
+    def do_nothing(self):
+        pass
+
+    def on_button_click(self):
+        self.increase_score()
+        self.animate_button()
+
+    def increase_score(self):
+        self.score += 1
+        self.score_label.config(text=f"Bang: {self.score}")
+
+    def animate_button(self):
+        self.click_button.config(width=280, height=280)
+        self.root.after(100, self.restore_button)
+
+    def restore_button(self):
+        self.click_button.config(width=255, height=255)
+
+# Инициализация Tkinter
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ClickerApp(root)
+    root.mainloop()
